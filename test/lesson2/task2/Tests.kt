@@ -20,7 +20,7 @@ class Tests {
         assertTrue(isNumberHappy(1533))
         assertTrue(isNumberHappy(9009))
         assertFalse(isNumberHappy(3644))
-    }
+}
 
     @Test
     @Tag("Easy")
