@@ -77,12 +77,11 @@ fun fib(n: Int): Int = if ( n <= 2 ) 1 else ( fib ( n - 1 ) + fib ( n - 2))
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-        var j = 1
+        var k = 1
     for (k in 1..(m * n)) {
         if ((k % m) == 0 && (k % n) == 0) break
-        j = j + 1
     }
-    return j
+    return k
 }
 
 /**
@@ -145,7 +144,15 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var j = x
+    for ( n in 5 .. 100 step 4 ){
+        while ( Math.pow( x , n.toDouble() ) / factorial( n ) > eps  ) {
+            j = j - Math.pow(x, n.toDouble() - 2.0) / factorial(n - 2) + Math.pow(x, n.toDouble()) / factorial(n)
+        }
+    }
+    return j
+}
 
 /**
  * Средняя
@@ -162,7 +169,29 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Поменять порядок цифр заданного числа n на обратный: 13478 -> 87431.
  * Не использовать строки при решении задачи.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var l = 0
+    var u = n
+    var k = 0
+    var j = 1
+    var t = n
+    var p = 0
+    while ( t >= 10) {
+        t = t / 10
+        j = j + 1
+    }
+    for ( i in j downTo 1) {
+        p = i
+        l = u % 10
+        while (p > 1 ) {
+            l = l * 10
+            p = p - 1
+        }
+        k = k + l
+        u = u / 10
+    }
+        return k
+}
 
 /**
  * Средняя
@@ -171,7 +200,23 @@ fun revert(n: Int): Int = TODO()
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var e = 0
+    var u :Boolean = true
+    var t = n
+    var j = 1
+    while (t >= 10) {
+        t = t / 10
+        j = j + 1
+    }
+        if ( j % 2 == 0  ) e = j / 2
+        else e = j / 2 + 1
+
+    for (i in 1..e ) {
+
+    }
+    return u
+}
 
 /**
  * Средняя
@@ -188,7 +233,31 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int =TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var a = 0
+    var k = 10
+    var c = 1
+    var s = 0
+    var i = 0
+    var b = 0
+    while ( s < n ) {
+        i = i + 1
+        b = i * i
+        while (b / k != 0) {
+            k = k * 10
+            c = c + 1
+        }
+        s = s + c
+    }
+    s = s - c
+    k = k / 10
+    while ( s != n ) {
+        a = b / k % 10
+        k = k / 10
+        s = s + 1
+    }
+    return a
+}
 
 
 /**
