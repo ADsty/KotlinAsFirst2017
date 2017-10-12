@@ -19,8 +19,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean =
-        if ( ( number / 1000 + ( (number / 100 ) % 10 ) ) == ( number % 10 + ( number / 10 ) % 10 ) ) true
-        else false
+        number / 1000 + number / 100 % 10 == number % 10 + number / 10 % 10
 
 /**
  * Простая
@@ -30,9 +29,7 @@ fun isNumberHappy(number: Int): Boolean =
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
-    if ( sqr( x1.toDouble() - x2 ) == sqr( y1.toDouble() - y2 ) || ( ( x1 == x2 )|| ( y1 == y2 ) ) ) true
-    else false
-
+        ((x1 == x2) || (y1 == y2)) || Math.abs(x1 - x2) == Math.abs(y1 - y2)
 /**
  * Средняя
  *
@@ -41,9 +38,8 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean = if ((  sqr(x1 - x2) + sqr(y1 - y2) <= sqr(r2)) &&
-        ( r2 - sqrt(sqr(x1 - x2) + sqr(y1 - y2) )) >= r1 ) true
-else false
+                 x2: Double, y2: Double, r2: Double): Boolean = r2 - sqrt(sqr(x1 - x2) + sqr(y1 - y2)) >= r1
+
 
 /**
  * Средняя
@@ -57,13 +53,6 @@ else false
 
 
 
-fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when {
-    a <= r && b <= s -> true
-    a <= r && c <= s -> true
-    b <= r && c <= s -> true
-    b <= r && a <= s -> true
-    c <= r && b <= s -> true
-    c <= r && a <= s -> true
-    else -> false
-
-}
+fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean =
+                (a <= r && b <= s) || (a <= r && c <= s) || (b <= r && c <= s) || (b <= r && a <= s) ||
+                (c <= r && b <= s) || (c <= r && a <= s)

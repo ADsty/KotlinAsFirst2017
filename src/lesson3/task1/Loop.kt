@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
 package lesson3.task1
 
+import lesson1.task1.sqr
+
 /**
  * Пример
  *
@@ -60,7 +62,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Найти количество цифр в заданном числе n.
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
-fun digitNumber(n: Int): Int = if ( n < 10 || n > - 10  ) 1 else  ( digitNumber( n / 10 ) + 1 )
+fun digitNumber(n: Int): Int = if (n < 10 && n > - 10) 1 else digitNumber(n / 10) + 1
 
 /**
  * Простая
@@ -68,7 +70,7 @@ fun digitNumber(n: Int): Int = if ( n < 10 || n > - 10  ) 1 else  ( digitNumber(
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if ( n <= 2 ) 1 else ( fib ( n - 1 ) + fib ( n - 2))
+fun fib(n: Int): Int = if (n <= 2) 1 else fib(n - 1) + fib(n - 2)
 
 /**
  * Простая
@@ -77,11 +79,12 @@ fun fib(n: Int): Int = if ( n <= 2 ) 1 else ( fib ( n - 1 ) + fib ( n - 2))
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-        var k = 1
+    var j = 1
     for (k in 1..(m * n)) {
         if ((k % m) == 0 && (k % n) == 0) break
+        j++
     }
-    return k
+    return j
 }
 
 /**
@@ -93,7 +96,7 @@ fun minDivisor(n: Int): Int {
     var j = 2
     for ( k in 2..n ) {
         if (n % k == 0) break
-        j = j + 1
+        j++
     }
     return j
 }
@@ -107,7 +110,7 @@ fun maxDivisor(n: Int): Int {
     var j = n
     for ( k in n downTo 2 ) {
         if (n % k == 0 && n > k ) break
-        j = j - 1
+        j--
     }
     return j
 }
@@ -123,7 +126,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var l : Boolean = true
     val h  = maxOf( m , n )
     for ( p in 2 .. h ) {
-        if ( m % p == 0 && n % p == 0 ) l = false
+        if ( m % p == 0 && n % p == 0 ) l = false && break
     }
     return l
 }
@@ -135,7 +138,11 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    for (i in m..n)
+        if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) return true
+        return false
+}
 
 /**
  * Средняя
@@ -163,27 +170,26 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var l = 0
-    var u = n
-    var k = 0
-    var j = 1
-    var t = n
-    var p = 0
-    while ( t >= 10) {
-        t = t / 10
-        j = j + 1
+    var cifra = 0
+    var ZadanChislo = n
+    var IzmChislo = 0
+    var dlina = 0
+    var peremennaya = 1
+    while ( n >= peremennaya) {
+        dlina ++
+        peremennaya = peremennaya * 10
     }
-    for ( i in j downTo 1) {
-        p = i
-        l = u % 10
-        while (p > 1 ) {
-            l = l * 10
-            p = p - 1
+    for ( i in dlina downTo 1) {
+        peremennaya = i
+        cifra = ZadanChislo % 10
+        while (peremennaya > 1 ) {
+            cifra *= 10
+            peremennaya --
         }
-        k = k + l
-        u = u / 10
+        IzmChislo += cifra
+        ZadanChislo /= 10
     }
-        return k
+        return IzmChislo
 }
 
 /**
@@ -194,21 +200,13 @@ fun revert(n: Int): Int {
  * 15751 -- палиндром, 3653 -- нет.
  */
 fun isPalindrome(n: Int): Boolean {
-    var e = 0
-    var u :Boolean = true
-    var t = n
-    var j = 1
-    while (t >= 10) {
-        t = t / 10
-        j = j + 1
-    }
-        if ( j % 2 == 0  ) e = j / 2
-        else e = j / 2 + 1
-
-    for (i in 1..e ) {
-
-    }
-    return u
+    val nStr = n.toString()
+    val dlina = nStr.length
+    val seredina = if ( dlina % 2 == 0) dlina / 2 else (dlina - 1) / 2
+    if (dlina == 1) return true
+     for (i in 0..seredina)
+         if (nStr[i] != nStr[dlina - i - 1]) return false
+     return true
 }
 
 /**
@@ -217,7 +215,14 @@ fun isPalindrome(n: Int): Boolean {
  * Для заданного числа n определить, содержит ли оно различающиеся цифры.
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var ntStr = n.toString()
+    var pervCifra = ntStr[0]
+    for (i in ntStr)
+        if(pervCifra != i) return true
+    return false
+}
+
 
 /**
  * Сложная
@@ -227,29 +232,18 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var a = 0
-    var k = 10
-    var c = 1
-    var s = 0
-    var i = 0
-    var b = 0
-    while ( s < n ) {
-        i = i + 1
-        b = i * i
-        while (b / k != 0) {
-            k = k * 10
-            c = c + 1
-        }
-        s = s + c
+    var t = 0
+    var ObshDlina = 0
+    var kvadrat = 0
+    var kvadratStr = ""
+    while (ObshDlina < n) {
+        t++
+        kvadrat = t * t
+        kvadratStr = kvadrat.toString()
+        ObshDlina += kvadratStr.length
     }
-    s = s - c
-    k = k / 10
-    while ( s != n ) {
-        a = b / k % 10
-        k = k / 10
-        s = s + 1
-    }
-    return a
+    t = kvadratStr.length - ( ObshDlina - n) - 1
+    return kvadratStr[t].toString().toInt()
 }
 
 
@@ -261,27 +255,16 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var a = 0
-    var k = 10
-    var c = 1
-    var s = 0
-    var i = 0
-    var b = 0
-    while ( s < n ) {
-        i= i + 1
-        b = fib( i )
-        while (b / k != 0) {
-            k = k * 10
-            c = c + 1
-        }
-        s = s + c
+  var t = 0
+  var ObshDlina = 0
+  var fibonachi = 0
+  var fibonachiStr = ""
+    while (ObshDlina < n) {
+        t++
+        fibonachi = fib(t)
+        fibonachiStr = fibonachi.toString()
+        ObshDlina += fibonachiStr.length
     }
-    s = s - c
-    k = k / 10
-    while ( s != n ) {
-        a = b / k % 10
-        k = k / 10
-        s = s + 1
-    }
-    return a
+    t = fibonachiStr.length - ( ObshDlina - n) - 1
+    return fibonachiStr[t].toString().toInt()
 }
