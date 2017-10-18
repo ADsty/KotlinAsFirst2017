@@ -62,7 +62,7 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Найти количество цифр в заданном числе n.
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
-fun digitNumber(n: Int): Int = if (n < 10 && n > - 10) 1 else digitNumber(n / 10) + 1
+fun digitNumber(n: Int): Int = if (Math.abs(n) < 10) 1 else digitNumber(n / 10) + 1
 
 /**
  * Простая
@@ -70,7 +70,15 @@ fun digitNumber(n: Int): Int = if (n < 10 && n > - 10) 1 else digitNumber(n / 10
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = if (n <= 2) 1 else fib(n - 1) + fib(n - 2)
+fun fib(n: Int): Int {
+    var a = 1
+    var b = 0
+    for (i in 2..n) {
+        a += b
+        b = a - b
+    }
+    return a
+}
 
 /**
  * Простая
@@ -80,7 +88,7 @@ fun fib(n: Int): Int = if (n <= 2) 1 else fib(n - 1) + fib(n - 2)
  */
 fun lcm(m: Int, n: Int): Int {
     var j = 1
-    for (k in 1..(m * n)) {
+    for (k in 1..m * n) {
         if ((k % m) == 0 && (k % n) == 0) break
         j++
     }
@@ -94,7 +102,8 @@ fun lcm(m: Int, n: Int): Int {
  */
 fun minDivisor(n: Int): Int {
     var j = 2
-    for ( k in 2..n ) {
+    var sqrt = Math.sqrt(n.toDouble())
+    for ( k in 2..n) {
         if (n % k == 0) break
         j++
     }
@@ -126,7 +135,9 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var l : Boolean = true
     val h  = maxOf( m , n )
     for ( p in 2 .. h ) {
-        if ( m % p == 0 && n % p == 0 ) l = false && break
+        l = false
+        if ( m % p == 0 && n % p == 0 ) break
+        l = true
     }
     return l
 }
@@ -139,7 +150,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    for (i in m..n)
+        for (i in m..n)
         if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) return true
         return false
 }
@@ -170,26 +181,26 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var cifra = 0
-    var ZadanChislo = n
-    var IzmChislo = 0
-    var dlina = 0
-    var peremennaya = 1
-    while ( n >= peremennaya) {
-        dlina ++
-        peremennaya = peremennaya * 10
+    var number = 0
+    var specifiedNumber = n
+    var modifiedNumber = 0
+    var length = 0
+    var variable = 1
+    while ( n >= variable) {
+        length ++
+        variable = variable * 10
     }
-    for ( i in dlina downTo 1) {
-        peremennaya = i
-        cifra = ZadanChislo % 10
-        while (peremennaya > 1 ) {
-            cifra *= 10
-            peremennaya --
+    for ( i in length downTo 1) {
+        variable = i
+        number = specifiedNumber % 10
+        while (variable > 1 ) {
+            number *= 10
+            variable --
         }
-        IzmChislo += cifra
-        ZadanChislo /= 10
+        modifiedNumber += number
+        specifiedNumber /= 10
     }
-        return IzmChislo
+        return modifiedNumber
 }
 
 /**
@@ -201,11 +212,11 @@ fun revert(n: Int): Int {
  */
 fun isPalindrome(n: Int): Boolean {
     val nStr = n.toString()
-    val dlina = nStr.length
-    val seredina = if ( dlina % 2 == 0) dlina / 2 else (dlina - 1) / 2
-    if (dlina == 1) return true
-     for (i in 0..seredina)
-         if (nStr[i] != nStr[dlina - i - 1]) return false
+    val length = nStr.length
+    val middle = if ( length % 2 == 0) length / 2 else (length - 1) / 2
+    if (length == 1) return true
+     for (i in 0..middle)
+         if (nStr[i] != nStr[length - i - 1]) return false
      return true
 }
 
@@ -217,9 +228,9 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var ntStr = n.toString()
-    var pervCifra = ntStr[0]
+    var firstNumber = ntStr[0]
     for (i in ntStr)
-        if(pervCifra != i) return true
+        if(firstNumber != i) return true
     return false
 }
 
@@ -233,17 +244,17 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var t = 0
-    var ObshDlina = 0
-    var kvadrat = 0
-    var kvadratStr = ""
-    while (ObshDlina < n) {
+    var allLength = 0
+    var square = 0
+    var squareStr = ""
+    while (allLength < n) {
         t++
-        kvadrat = t * t
-        kvadratStr = kvadrat.toString()
-        ObshDlina += kvadratStr.length
+        square = t * t
+        squareStr = square.toString()
+        allLength += squareStr.length
     }
-    t = kvadratStr.length - ( ObshDlina - n) - 1
-    return kvadratStr[t].toString().toInt()
+    t = squareStr.length - (allLength - n) - 1
+    return squareStr[t].toString().toInt()
 }
 
 
@@ -256,15 +267,15 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
   var t = 0
-  var ObshDlina = 0
+  var allLength = 0
   var fibonachi = 0
   var fibonachiStr = ""
-    while (ObshDlina < n) {
+    while (allLength < n) {
         t++
         fibonachi = fib(t)
         fibonachiStr = fibonachi.toString()
-        ObshDlina += fibonachiStr.length
+        allLength += fibonachiStr.length
     }
-    t = fibonachiStr.length - ( ObshDlina - n) - 1
+    t = fibonachiStr.length - (allLength - n) - 1
     return fibonachiStr[t].toString().toInt()
 }

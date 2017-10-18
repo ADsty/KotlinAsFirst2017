@@ -2,6 +2,9 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
+import lesson3.task1.isPrime
+import lesson3.task1.minDivisor
 
 /**
  * Пример
@@ -106,14 +109,23 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * по формуле abs = sqrt(a1^2 + a2^2 + ... + aN^2).
  * Модуль пустого вектора считать равным 0.0.
  */
-fun abs(v: List<Double>): Double = TODO()
+fun abs(v: List<Double>): Double {
+    var a = 0.0
+    for (i in v)
+        a += sqr(i)
+    return Math.sqrt(a)
+}
 
 /**
  * Простая
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = TODO()
+fun mean(list: List<Double>): Double {
+    var average = 0.0
+    if (list.size != 0) average = list.sum() / list.size
+    return average
+}
 
 /**
  * Средняя
@@ -123,7 +135,14 @@ fun mean(list: List<Double>): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun center(list: MutableList<Double>): MutableList<Double> = TODO()
+fun center(list: MutableList<Double>): MutableList<Double> {
+    var average = list.sum() / list.size
+    for (i in 0..list.size - 1) {
+        if (list.size == 0) break
+        list[i]-= average
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -132,7 +151,15 @@ fun center(list: MutableList<Double>): MutableList<Double> = TODO()
  * представленные в виде списков a и b. Скалярное произведение считать по формуле:
  * C = a1b1 + a2b2 + ... + aNbN. Произведение пустых векторов считать равным 0.0.
  */
-fun times(a: List<Double>, b: List<Double>): Double = TODO()
+fun times(a: List<Double>, b: List<Double>): Double {
+    var sum = 0.0
+    var length = a.size
+    for (i in 0..length - 1) {
+        if (length == 0) break
+        sum += a[i] * b[i]
+    }
+    return sum
+}
 
 /**
  * Средняя
@@ -142,7 +169,15 @@ fun times(a: List<Double>, b: List<Double>): Double = TODO()
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0.0 при любом x.
  */
-fun polynom(p: List<Double>, x: Double): Double = TODO()
+fun polynom(p: List<Double>, x: Double): Double {
+    var sum = 0.0
+    var length = p.size
+    for (i in 0..length - 1){
+        if (length == 0) break
+        sum += p[i] * Math.pow(x , i.toDouble())
+    }
+    return sum
+}
 
 /**
  * Средняя
@@ -154,7 +189,16 @@ fun polynom(p: List<Double>, x: Double): Double = TODO()
  *
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
-fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
+fun accumulate(list: MutableList<Double>): MutableList<Double> {
+    var sum = 0.0
+    var length = list.size
+    for (i in 0..length - 1){
+        if (length == 0) break
+        sum += list[i]
+        list[i] = sum
+    }
+    return list
+}
 
 /**
  * Средняя
@@ -163,15 +207,25 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
-
+fun factorize(n: Int): List<Int> {
+    var list = listOf<Int>()
+    var h = 0
+    var k = n
+    while (isPrime(k) != true){
+        h = minDivisor(k)
+        list += h
+        k /= h
+    }
+    list += k
+    return list.sorted()
+}
 /**
  * Сложная
  *
  * Разложить заданное натуральное число n > 1 на простые множители.
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*")
 
 /**
  * Средняя
@@ -222,6 +276,7 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  */
 fun roman(n: Int): String = TODO()
 
+
 /**
  * Очень сложная
  *
@@ -229,4 +284,54 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val str1 = listOf<String>(" " , "один" , "два" , "три" , "четыре" , "пять" , "шесть" , "семь" ,
+            "восемь" , "девять")
+    val str1001 = listOf<String>(" " , "одна" , "две", "три" , "четыре", "пять" , "шесть" , "семь" ,
+            "восемь" , "девять")
+    val str100 = listOf<String>(" " , "сто" , "двести" , "триста" , "четыреста" , "пятьсот" ,
+            "шестьсот" , "семьсот" , "восемьсот" , "девятьсот")
+    val str11 = listOf<String>( "десять" , "одиннадцать" , "двенадцать" , "тринадцать" ,
+            "четырнадцать" , "пятнадцать" , "шестнадцать" , "семнадцать" , "восемнадцать" , "девятнадцать")
+    val str10 = listOf<String>(" " , "десять" , "двадцать" , "тридцать" , "сорок" , "пятьдесят" ,
+             "шестьдесят" , "семьдесят" , "восемьдесят", "девяносто" )
+    val thuosends = listOf<String>("тысяч" , "тысячи" , "тысяча" , "тысяч")
+    val sites = mutableListOf<Int>()
+    var firstPart = 0
+    var transfer = mutableListOf<String>()
+    if (n == 0) return "ноль"
+    if(n > 999) firstPart = n / 1000
+    var secondPart = n - firstPart * 1000
+    sites.add(0 , firstPart)
+    sites.add(1 , secondPart)
+    for(i in 0..1) {
+        var int1 = sites[i] % 10
+        var int10 = sites[i] % 100
+        var int100 = sites[i] / 100
+        if (int100 > 0) transfer.add(str100[int100])
+        if (int10 > 9 && int10 < 20) transfer.add(str11[int1])
+        else {
+            transfer.add(str10[int10 / 10])
+            if (i == 0) transfer.add(str1001[int1])
+            else transfer.add(str1[int1])
+        }
+        if (i == 0 && n > 999) {
+            if (int10 >= 11 && int10 <= 19) transfer.add(thuosends[0])
+            else {
+                if (int1 >= 2 && int1 <= 4) transfer.add(thuosends[1])
+                else if (int1 == 1) transfer.add(thuosends[2])
+                else transfer.add(thuosends[3])
+            }
+        }
+    }
+            return transfer.filter { it != " "}.joinToString(separator = " ")
+        }
+
+
+
+
+
+
+
+
+
