@@ -36,11 +36,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String = when {
-    age / 10 == 1 || age / 10 == 11 -> "$age лет"
+    age in 10..20 || age in 110..120 -> "$age лет"
     age % 10 == 1 -> "$age год"
     age % 10 > 1 && age % 10 < 5 -> "$age года"
-    age % 10 >= 5 || age % 10 == 0 -> "$age лет"
-    else -> "Такого возраста не существует"
+    else -> "$age лет"
 }
 
 
@@ -78,12 +77,12 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    val rook1Danger : Boolean = kingX == rookX1 || kingY == rookY1
-    val rook2Danger : Boolean = kingX == rookX2 || kingY == rookY2
+    val rook1Danger = kingX == rookX1 || kingY == rookY1
+    val rook2Danger = kingX == rookX2 || kingY == rookY2
     return when {
-        rook1Danger == true && rook2Danger == true -> 3
-        rook1Danger == true -> 1
-        rook2Danger == true -> 2
+        rook1Danger && rook2Danger -> 3
+        rook1Danger -> 1
+        rook2Danger -> 2
         else -> 0
         }
 }
@@ -103,12 +102,12 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           bishopX: Int, bishopY: Int): Int {
         val lenX = bishopX - kingX
         val lenY = bishopY - kingY
-        val bishopDanger : Boolean = Math.abs(lenX) == Math.abs(lenY)
-        val rookDanger : Boolean = kingX == rookX || kingY == rookY
+        val bishopDanger = Math.abs(lenX) == Math.abs(lenY)
+        val rookDanger = kingX == rookX || kingY == rookY
         return when {
-            bishopDanger == true && rookDanger == true -> 3
-            rookDanger == true -> 1
-            bishopDanger == true -> 2
+            bishopDanger && rookDanger -> 3
+            rookDanger -> 1
+            bishopDanger -> 2
             else -> 0
     }
 }
@@ -138,21 +137,11 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     val cd = d - c
     val ad = d - a
     val cb = b - c
-    if (a < c)
-        if (d < b) return cd
-        else if (d >= b)
-            if (b < c) return -1
-            else if (b > c) return cb
-            else return 0
-        else return -1
-    else if (a > c)
-        if (a < d)
-            if (b >= d) return ad
-            else return ab
-        else if (a > d) return -1
-        else return 0
-    else
-        if (b > d) return cd
-        else if (b < d) return ab
-        else return ab
+    return when {
+       b >= c && c > a && d > b -> cb
+       d >= a && a > c && d <= b -> ad
+       a <= c && d < b && a < d -> cd
+       c <= a && b <= d -> ab
+        else -> -1
+    }
 }

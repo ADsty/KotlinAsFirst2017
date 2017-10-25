@@ -79,21 +79,20 @@ fun fib(n: Int): Int {
     }
     return a
 }
-
+/**
+ * Функция для нахождения НОД
+ */
+fun nod(a: Int, b: Int): Int {
+        if (b == 0) return a
+        return nod(b, a % b)
+    }
 /**
  * Простая
  *
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    var j = 1
-    for (k in 1..m * n) {
-        if ((k % m) == 0 && (k % n) == 0) break
-        j++
-    }
-    return j
-}
+fun lcm(m: Int, n: Int): Int =  m / nod(m, n) * n
 
 /**
  * Простая
@@ -131,16 +130,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean {
-    var l : Boolean = true
-    val h  = maxOf( m , n )
-    for ( p in 2 .. h ) {
-        l = false
-        if ( m % p == 0 && n % p == 0 ) break
-        l = true
-    }
-    return l
-}
+fun isCoPrime(m: Int, n: Int): Boolean = nod(m, n) == 1
 
 /**
  * Простая
@@ -151,7 +141,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
         for (i in m..n)
-        if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) return true
+            if (Math.sqrt(i.toDouble()) % 1.0 == 0.0) return true
         return false
 }
 
@@ -181,26 +171,21 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Не использовать строки при решении задачи.
  */
 fun revert(n: Int): Int {
-    var number = 0
     var specifiedNumber = n
     var modifiedNumber = 0
-    var length = 0
+    var length = digitNumber(n)
     var variable = 1
-    while ( n >= variable) {
-        length ++
-        variable = variable * 10
-    }
     for ( i in length downTo 1) {
         variable = i
-        number = specifiedNumber % 10
+        var number = specifiedNumber % 10
         while (variable > 1 ) {
             number *= 10
-            variable --
+            variable--
         }
         modifiedNumber += number
         specifiedNumber /= 10
     }
-        return modifiedNumber
+    return modifiedNumber
 }
 
 /**
@@ -210,15 +195,7 @@ fun revert(n: Int): Int {
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean {
-    val nStr = n.toString()
-    val length = nStr.length
-    val middle = if ( length % 2 == 0) length / 2 else (length - 1) / 2
-    if (length == 1) return true
-     for (i in 0..middle)
-         if (nStr[i] != nStr[length - i - 1]) return false
-     return true
-}
+fun isPalindrome(n: Int): Boolean = if (n == revert(n)) true else false
 
 /**
  * Средняя
@@ -247,13 +224,15 @@ fun squareSequenceDigit(n: Int): Int {
     var allLength = 0
     var square = 0
     var squareStr = ""
+    var squareLength = 0
     while (allLength < n) {
         t++
         square = t * t
-        squareStr = square.toString()
-        allLength += squareStr.length
+        squareLength = digitNumber(square)
+        allLength += squareLength
     }
-    t = squareStr.length - (allLength - n) - 1
+    squareStr = square.toString()
+    t = squareLength - (allLength - n) - 1
     return squareStr[t].toString().toInt()
 }
 
@@ -270,12 +249,14 @@ fun fibSequenceDigit(n: Int): Int {
   var allLength = 0
   var fibonachi = 0
   var fibonachiStr = ""
+  var fibonachiLength = 0
     while (allLength < n) {
         t++
         fibonachi = fib(t)
-        fibonachiStr = fibonachi.toString()
-        allLength += fibonachiStr.length
+        fibonachiLength = digitNumber(fibonachi)
+        allLength += fibonachiLength
     }
-    t = fibonachiStr.length - (allLength - n) - 1
+    fibonachiStr = fibonachi.toString()
+    t = fibonachiLength- (allLength - n) - 1
     return fibonachiStr[t].toString().toInt()
 }
