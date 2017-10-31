@@ -56,7 +56,7 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
 
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     var minOfBrick = minOf(a, b, c)
-    var middleOfBrick = maxOf(minOf(a , b) ,minOf(b , c))
+    var middleOfBrick = minOf(maxOf(minOf(a , b) ,minOf(b , c)) , maxOf(a , c))
     var minOfPas = minOf(r , s)
     var maxOfPas = maxOf(r , s)
     if (minOfBrick <= minOfPas && middleOfBrick <= maxOfPas) return true
