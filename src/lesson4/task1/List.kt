@@ -123,7 +123,7 @@ fun abs(v: List<Double>): Double {
  */
 fun mean(list: List<Double>): Double {
     var average = 0.0
-    if (list.size != 0) average = list.sum() / list.size
+    if (list.isNotEmpty()) average = list.sum() / list.size
     return average
 }
 
@@ -136,7 +136,7 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    var average = list.sum() / list.size
+    var average = mean(list)
     for (i in 0..list.size - 1) {
         if (list.size == 0) break
         list[i]-= average
@@ -153,11 +153,9 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Double>, b: List<Double>): Double {
     var sum = 0.0
-    var length = a.size
-    for (i in 0..length - 1) {
-        if (length == 0) break
+    val length = a.size
+    for (i in 0..length - 1)
         sum += a[i] * b[i]
-    }
     return sum
 }
 
@@ -171,11 +169,9 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var sum = 0.0
-    var length = p.size
-    for (i in 0..length - 1){
-        if (length == 0) break
-        sum += p[i] * Math.pow(x , i.toDouble())
-    }
+    val length = p.size
+    for (i in 0..length - 1)
+        sum += p[i] * Math.pow(x, i.toDouble())
     return sum
 }
 
@@ -191,9 +187,8 @@ fun polynom(p: List<Double>, x: Double): Double {
  */
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     var sum = 0.0
-    var length = list.size
-    for (i in 0..length - 1){
-        if (length == 0) break
+    val length = list.size
+    for (i in 0..length - 1) {
         sum += list[i]
         list[i] = sum
     }
@@ -211,13 +206,13 @@ fun factorize(n: Int): List<Int> {
     var list = listOf<Int>()
     var h = 0
     var k = n
-    while (isPrime(k) != true){
+    while (!isPrime(k)) {
         h = minDivisor(k)
         list += h
         k /= h
     }
     list += k
-    return list.sorted()
+    return list
 }
 /**
  * Сложная
@@ -285,26 +280,24 @@ fun roman(n: Int): String = TODO()
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 fun russian(n: Int): String {
-    val str1 = listOf<String>(" " , "один" , "два" , "три" , "четыре" , "пять" , "шесть" , "семь" ,
-            "восемь" , "девять")
-    val str1001 = listOf<String>(" " , "одна" , "две", "три" , "четыре", "пять" , "шесть" , "семь" ,
-            "восемь" , "девять")
-    val str100 = listOf<String>(" " , "сто" , "двести" , "триста" , "четыреста" , "пятьсот" ,
-            "шестьсот" , "семьсот" , "восемьсот" , "девятьсот")
-    val str11 = listOf<String>( "десять" , "одиннадцать" , "двенадцать" , "тринадцать" ,
-            "четырнадцать" , "пятнадцать" , "шестнадцать" , "семнадцать" , "восемнадцать" , "девятнадцать")
-    val str10 = listOf<String>(" " , "десять" , "двадцать" , "тридцать" , "сорок" , "пятьдесят" ,
-             "шестьдесят" , "семьдесят" , "восемьдесят", "девяносто" )
-    val thuosends = listOf<String>("тысяч" , "тысячи" , "тысяча" , "тысяч")
+    val str1 = listOf(" ", "один", "два", "три", "четыре", "пять", "шесть", "семь",
+            "восемь", "девять")
+    val str1001 = listOf(" ", "одна", "две", "три", "четыре", "пять", "шесть", "семь",
+            "восемь", "девять")
+    val str100 = listOf(" ", "сто", "двести", "триста", "четыреста", "пятьсот",
+            "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    val str11 = listOf("десять", "одиннадцать", "двенадцать", "тринадцать",
+            "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+    val str10 = listOf(" ", "десять", "двадцать", "тридцать", "сорок", "пятьдесят",
+            "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+    val thuosends = listOf("тысяч", "тысячи", "тысяча", "тысяч")
     val sites = mutableListOf<Int>()
-    var firstPart = 0
     var transfer = mutableListOf<String>()
-    if (n == 0) return "ноль"
-    if(n > 999) firstPart = n / 1000
-    var secondPart = n - firstPart * 1000
-    sites.add(0 , firstPart)
-    sites.add(1 , secondPart)
-    for(i in 0..1) {
+    val firstPart = n / 1000
+    val secondPart = n - firstPart * 1000
+    sites.add(0, firstPart)
+    sites.add(1, secondPart)
+    for (i in 0..1) {
         var int1 = sites[i] % 10
         var int10 = sites[i] % 100
         var int100 = sites[i] / 100
@@ -316,16 +309,16 @@ fun russian(n: Int): String {
             else transfer.add(str1[int1])
         }
         if (i == 0 && n > 999) {
-            if (int10 >= 11 && int10 <= 19) transfer.add(thuosends[0])
-            else {
-                if (int1 >= 2 && int1 <= 4) transfer.add(thuosends[1])
-                else if (int1 == 1) transfer.add(thuosends[2])
-                else transfer.add(thuosends[3])
+            when {
+                int10 >= 11 && int10 <= 19 -> transfer.add(thuosends[0])
+                int1 >= 2 && int1 <= 4 -> transfer.add(thuosends[1])
+                int1 == 1 -> transfer.add(thuosends[2])
+                else -> transfer.add(thuosends[3])
             }
         }
     }
-            return transfer.filter { it != " "}.joinToString(separator = " ")
-        }
+    return transfer.filter { it != " " }.joinToString(separator = " ")
+}
 
 
 

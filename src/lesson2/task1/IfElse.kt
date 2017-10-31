@@ -84,7 +84,7 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
         rook1Danger -> 1
         rook2Danger -> 2
         else -> 0
-        }
+    }
 }
 
 /**
@@ -100,15 +100,15 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-        val lenX = bishopX - kingX
-        val lenY = bishopY - kingY
-        val bishopDanger = Math.abs(lenX) == Math.abs(lenY)
-        val rookDanger = kingX == rookX || kingY == rookY
-        return when {
-            bishopDanger && rookDanger -> 3
-            rookDanger -> 1
-            bishopDanger -> 2
-            else -> 0
+    val lenX = bishopX - kingX
+    val lenY = bishopY - kingY
+    val bishopDanger = Math.abs(lenX) == Math.abs(lenY)
+    val rookDanger = kingX == rookX || kingY == rookY
+    return when {
+        bishopDanger && rookDanger -> 3
+        rookDanger -> 1
+        bishopDanger -> 2
+        else -> 0
     }
 }
 
@@ -138,10 +138,10 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     val ad = d - a
     val cb = b - c
     return when {
-       b >= c && c > a && d >= b -> cb
-       d >= a && a > c && d <= b -> ad
-       a <= c && d < b && a <= d -> cd
-       c <= a && b <= d -> ab
+        b >= c && c > a && d >= b -> cb
+        d >= a && a > c && d <= b -> ad
+        a <= c && d < b && a <= d -> cd
+        c <= a && b < d || a == c && b == d -> ab
         else -> -1
     }
 }
