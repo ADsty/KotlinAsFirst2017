@@ -40,8 +40,18 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
         r2 - sqrt(sqr(x1 - x2) + sqr(y1 - y2)) >= r1
+/**
+ * Функция для нахлждения среднего числа из 3
+ */
 
-
+fun middleOfThree(a: Int, b: Int, c: Int): Int {
+    return when {
+        b >= a && a >= c || c >= a && a >= b -> a
+        a >= b && b >= c || c >= b && b >= a -> b
+        a >= c && c >= b || b >= c && c >= a -> c
+        else -> 0
+    }
+}
 /**
  * Средняя
  *
@@ -55,7 +65,7 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
 
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     var minOfBrick = minOf(a, b, c)
-    var middleOfBrick = minOf(maxOf(minOf(a, b), minOf(b, c)), maxOf(a, c))
+    var middleOfBrick = middleOfThree(a, b, c)
     var minOfPas = minOf(r, s)
     var maxOfPas = maxOf(r, s)
     if (minOfBrick <= minOfPas && middleOfBrick <= maxOfPas) return true
