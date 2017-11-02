@@ -234,8 +234,7 @@ fun squareSequenceDigit(n: Int): Int {
         variable *= 10
         t--
     }
-    t = square / variable % 10
-    return t
+    return square / variable % 10
 }
 
 
@@ -264,6 +263,5 @@ fun fibSequenceDigit(n: Int): Int {
         variable *= 10
         t--
     }
-    t = fibonachi / variable % 10
-    return t
+    return fibonachi / variable % 10
 }

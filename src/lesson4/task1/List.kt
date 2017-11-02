@@ -122,9 +122,8 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    var average = 0.0
-    if (list.isNotEmpty()) average = list.sum() / list.size
-    return average
+    if (list.isNotEmpty()) return list.sum() / list.size
+    else return 0.0
 }
 
 /**
@@ -138,8 +137,7 @@ fun mean(list: List<Double>): Double {
 fun center(list: MutableList<Double>): MutableList<Double> {
     var average = mean(list)
     for (i in 0..list.size - 1) {
-        if (list.size == 0) break
-        list[i]-= average
+        list[i] -= average
     }
     return list
 }
@@ -204,10 +202,9 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> {
  */
 fun factorize(n: Int): List<Int> {
     var list = listOf<Int>()
-    var h = 0
     var k = n
     while (!isPrime(k)) {
-        h = minDivisor(k)
+        var h = minDivisor(k)
         list += h
         k /= h
     }
