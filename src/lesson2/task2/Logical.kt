@@ -44,14 +44,13 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Функция для нахождения среднего числа из 3
  */
 
-fun middleOfThree(a: Int, b: Int, c: Int): Int {
-    return when {
-        b >= a && a >= c || c >= a && a >= b -> a
-        a >= b && b >= c || c >= b && b >= a -> b
-        a >= c && c >= b || b >= c && c >= a -> c
-        else -> 0
-    }
-}
+fun middleOfThree(a: Int, b: Int, c: Int): Int =
+        when {
+            b >= a && a >= c || c >= a && a >= b -> a
+            a >= b && b >= c || c >= b && b >= a -> b
+            a >= c && c >= b || b >= c && c >= a -> c
+            else -> 0
+        }
 /**
  * Средняя
  *

@@ -121,10 +121,8 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double {
-    if (list.isNotEmpty()) return list.sum() / list.size
-    else return 0.0
-}
+fun mean(list: List<Double>): Double =
+        if (list.isNotEmpty()) list.sum() / list.size else 0.0
 
 /**
  * Средняя
@@ -204,7 +202,7 @@ fun factorize(n: Int): List<Int> {
     var list = listOf<Int>()
     var k = n
     while (!isPrime(k)) {
-        var h = minDivisor(k)
+        val h = minDivisor(k)
         list += h
         k /= h
     }
