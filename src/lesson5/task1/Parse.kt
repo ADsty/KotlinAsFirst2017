@@ -263,11 +263,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (commands[j] == '<') i--
         if (commands[j] == '[') {
             if (mutList[i] == 0)
-                j = commands.indexOf(']', i)
+                j = commands.indexOf(']', j)
         }
         if (commands[j] == ']')  {
             if (mutList[i] != 0)
-                j = commands.lastIndexOf('[' , i)
+                j = commands.lastIndexOf('[' , j)
         }
         if (commands[j] == ' ') {
         }
