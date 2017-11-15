@@ -72,21 +72,15 @@ fun dateStrToDigit(str: String): String {
     var days = 0
     var month = 0
     var year = 0
-    var i = 0
-    val months = listOf<String>(" ", "января", "февраля", "марта", "апреля", "мая",
+    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
             "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    for (part in parts) {
-        if (i == 0) {
-            days = part.toInt()
-        } else if (i == 1) {
-            month = months.indexOf(part)
-        } else {
-            year = part.toInt()
-        }
-        i++
-    }
-    if (month < 1 || days < 1 || days > 31) return ""
-    return String.format("%02d.%02d.%02d", days, month, year)
+    if (Regex("""[0123456789]""").find(parts[0]) != null) days = parts[0].toInt()
+    else return ""
+    month = months.indexOf(parts[1])
+    if (month == -1) return ""
+    if (Regex("""[0123456789]""").find(parts[2]) != null) year = parts[2].toInt()
+    else return ""
+    return String.format("%02d.%02d.%d", days, month, year)
 }
 
 /**
@@ -102,22 +96,17 @@ fun dateDigitToStr(digital: String): String {
     var days = 0
     var month = ""
     var year = 0
-    var i = 0
-    val months = listOf<String>(" ", "января", "февраля", "марта", "апреля", "мая",
+    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
             "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    for (part in parts) {
-        try {
-            if (i == 0) {
-                days = part.toInt()
-            } else if (i == 1) {
-                month = months[part.toInt()]
-            } else {
-                year = part.toInt()
-            }
-        } catch (ex: NumberFormatException) {
-            return ""
-        }
-        i++
+    try {
+        if (Regex("""[0123456789]""").find(parts[0]) != null) days = parts[0].toInt()
+        else return ""
+        if (parts[1].toInt() == -1) return ""
+        else month = months[parts[1].toInt()]
+        if (Regex("""[0123456789]""").find(parts[2]) != null) year = parts[2].toInt()
+        else return ""
+    } catch (ex: NumberFormatException) {
+        return ""
     }
     if (month == " " || month == "" || days < 1 || days > 31) return ""
     return String.format("%d %s %d", days, month, year)
@@ -135,7 +124,10 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    if (!phone.matches(Regex("""^\+?[ \d\-\(\)]{1,}$"""))) return ""
+    return phone.replace(Regex("""[ \-\(\)]"""), "")
+}
 
 /**
  * Средняя
@@ -147,7 +139,7 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int =TODO()
 
 /**
  * Сложная
@@ -245,4 +237,42 @@ fun fromRoman(roman: String): Int = TODO()
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var i = cells / 2
+    var j = 0
+    var lim = 0
+    var rec = 0
+    var mutList = MutableList(cells , {0})
+    if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
+    if (commands.count { it == '[' } != commands.count { it == ']' }) throw IllegalArgumentException()
+    for (k in 0..commands.length - 1){
+        if (commands[k] == '[')
+            rec++
+            var imp = k + 1
+        while (rec > 0 && imp < commands.length){
+            if (commands[imp] == '[') rec++
+            if (commands[imp] == ']') rec--
+            imp++
+        }
+        if (rec != 0) throw IllegalArgumentException()
+    }
+    while (lim < limit && j < commands.length){
+        if (commands[j] == '+') mutList[i]++
+        if (commands[j] == '-') mutList[i]--
+        if (commands[j] == '>') i++
+        if (commands[j] == '<') i--
+        if (commands[j] == '[') {
+            if (mutList[i] == 0)
+                j = commands.indexOf(']', i)
+        }
+        if (commands[j] == ']')  {
+            if (mutList[i] != 0)
+                j = commands.lastIndexOf('[' , i)
+        }
+        if (commands[j] == ' ') {
+        }
+        lim++ ; j++
+    }
+    if (i !in 0..cells) throw IllegalStateException()
+return mutList
+}
