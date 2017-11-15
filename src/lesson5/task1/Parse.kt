@@ -172,7 +172,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var duplicate = ""
+    var allLength = 0
+    for (s in str.toLowerCase().split(' ')) {
+        if (s != duplicate) {
+            duplicate = s
+            allLength += s.length + 1
+        } else return allLength - s.length - 1
+    }
+    return -1
+}
 
 /**
  * Сложная
@@ -237,8 +247,8 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var i = cells / 2
-    var j = 0
+    var cellNumber = cells / 2
+    var commandNumber = 0
     var lim = 0
     var rec = 0
     var mutList = MutableList(cells, { 0 })
@@ -249,37 +259,37 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (rec == -1) throw IllegalArgumentException()
     }
     if (rec != 0) throw IllegalArgumentException()
-    while (lim < limit && j < commands.length) {
+    while (lim < limit && commandNumber < commands.length) {
         when {
-            commands[j] == '+' -> mutList[i]++
-            commands[j] == '-' -> mutList[i]--
-            commands[j] == '>' -> i++
-            commands[j] == '<' -> i--
-            commands[j] == '[' -> {
-                if (mutList[i] == 0) {
-                    while (j <= commands.length - 1) {
-                        if (commands[j] == '[') rec++
-                        if (commands[j] == ']') rec--
+            commands[commandNumber] == '+' -> mutList[cellNumber]++
+            commands[commandNumber] == '-' -> mutList[cellNumber]--
+            commands[commandNumber] == '>' -> cellNumber++
+            commands[commandNumber] == '<' -> cellNumber--
+            commands[commandNumber] == '[' -> {
+                if (mutList[cellNumber] == 0) {
+                    while (commandNumber <= commands.length - 1) {
+                        if (commands[commandNumber] == '[') rec++
+                        if (commands[commandNumber] == ']') rec--
                         if (rec == 0) break
-                        j++
+                        commandNumber++
                     }
                 }
             }
-            commands[j] == ']' -> {
-                if (mutList[i] != 0) {
-                    while (j >= 0) {
-                        if (commands[j] == '[') rec++
-                        if (commands[j] == ']') rec--
+            commands[commandNumber] == ']' -> {
+                if (mutList[cellNumber] != 0) {
+                    while (commandNumber >= 0) {
+                        if (commands[commandNumber] == '[') rec++
+                        if (commands[commandNumber] == ']') rec--
                         if (rec == 0) break
-                        j--
+                        commandNumber--
                     }
                 }
             }
-            commands[j] == ' ' -> {
+            commands[commandNumber] == ' ' -> {
             }
         }
-        lim++; j++
-        if (i !in 0..cells) throw IllegalStateException()
+        lim++; commandNumber++
+        if (cellNumber !in 0..cells) throw IllegalStateException()
     }
     return mutList
 }
