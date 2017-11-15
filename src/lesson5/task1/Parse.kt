@@ -152,7 +152,6 @@ fun bestLongJump(jumps: String): Int =TODO()
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int = TODO()
-
 /**
  * Сложная
  *
@@ -242,37 +241,45 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var j = 0
     var lim = 0
     var rec = 0
-    var mutList = MutableList(cells , {0})
+    var mutList = MutableList(cells, { 0 })
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
-    if (commands.count { it == '[' } != commands.count { it == ']' }) throw IllegalArgumentException()
-    for (k in 0..commands.length - 1){
-        if (commands[k] == '[')
-            rec++
-            var imp = k + 1
-        while (rec > 0 && imp < commands.length){
-            if (commands[imp] == '[') rec++
-            if (commands[imp] == ']') rec--
-            imp++
-        }
-        if (rec != 0) throw IllegalArgumentException()
+    for (k in 0..commands.length - 1) {
+        if (commands[k] == '[') rec++
+        if (commands[k] == ']') rec--
+        if (rec == -1) throw IllegalArgumentException()
     }
-    while (lim < limit && j < commands.length){
-        if (commands[j] == '+') mutList[i]++
-        if (commands[j] == '-') mutList[i]--
-        if (commands[j] == '>') i++
-        if (commands[j] == '<') i--
-        if (commands[j] == '[') {
-            if (mutList[i] == 0)
-                j = commands.indexOf(']', j)
+    if (rec != 0) throw IllegalArgumentException()
+    while (lim < limit && j < commands.length) {
+        when {
+            commands[j] == '+' -> mutList[i]++
+            commands[j] == '-' -> mutList[i]--
+            commands[j] == '>' -> i++
+            commands[j] == '<' -> i--
+            commands[j] == '[' -> {
+                if (mutList[i] == 0) {
+                    while (j <= commands.length - 1) {
+                        if (commands[j] == '[') rec++
+                        if (commands[j] == ']') rec--
+                        if (rec == 0) break
+                        j++
+                    }
+                }
+            }
+            commands[j] == ']' -> {
+                if (mutList[i] != 0) {
+                    while (j >= 0) {
+                        if (commands[j] == '[') rec++
+                        if (commands[j] == ']') rec--
+                        if (rec == 0) break
+                        j--
+                    }
+                }
+            }
+            commands[j] == ' ' -> {
+            }
         }
-        if (commands[j] == ']')  {
-            if (mutList[i] != 0)
-                j = commands.lastIndexOf('[' , j)
-        }
-        if (commands[j] == ' ') {
-        }
-        lim++ ; j++
+        lim++; j++
+        if (i !in 0..cells) throw IllegalStateException()
     }
-    if (i !in 0..cells) throw IllegalStateException()
-return mutList
+    return mutList
 }
