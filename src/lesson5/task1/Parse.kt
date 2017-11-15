@@ -248,6 +248,7 @@ fun fromRoman(roman: String): Int = TODO()
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var cellNumber = cells / 2
+    if (cells == 1) cellNumber = 1
     var commandNumber = 0
     var lim = 0
     var rec = 0
