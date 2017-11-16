@@ -67,23 +67,16 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val parts = str.split(" ")
-    if (parts.count() != 3) return ""
-    var days = 0
-    var month = 0
-    var year = 0
-    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
-            "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    if (parts[0].matches(Regex("""[\d]"""))) days = parts[0].toInt()
-    else return ""
-    month = months.indexOf(parts[1])
-    if (month == -1) return ""
-    if (parts[2].matches(Regex("""[\d]"""))) year = parts[2].toInt()
-    else return ""
-    return String.format("%02d.%02d.%d", days, month, year)
+    val listMonth = listOf<String>(" ", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+            "сентября", "октября", "ноября", "декабря")
+    val parts = str.split(" ").toMutableList()
+    if ((parts.count() != 3) || !(parts[1] in listMonth)) return ""
+    val month = listMonth.indexOf(parts[1])
+    parts[0] = twoDigitStr(parts[0].toInt())
+    parts[1] = twoDigitStr(month.toInt())
+    return parts.joinToString(separator = ".")
 }
-
-/**
+    /**
  * Средняя
  *
  * Дата представлена строкой вида "15.07.2016".
@@ -91,26 +84,27 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val parts = digital.split(".")
-    if (parts.count() != 3) return ""
-    var days = 0
-    var month = ""
-    var year = 0
-    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
-            "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    try {
-        if (parts[0].matches(Regex("""[\d]"""))) days = parts[0].toInt()
-        else return ""
-        if (parts[1].toInt() == -1) return ""
-        else month = months[parts[1].toInt()]
-        if (parts[2].matches(Regex("""[\d]"""))) year = parts[2].toInt()
-        else return ""
-    } catch (ex: NumberFormatException) {
-        return ""
+        val listMonth = listOf<String>("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+                "сентября", "октября", "ноября", "декабря")
+        val parts = digital.split(".").toMutableList()
+        if (parts.count() != 3) return ""
+
+        var month = 0
+        try {
+            month = parts[1].toInt() - 1
+            if (month !in 0..11) return ""
+        } catch (ex: NumberFormatException) {
+            return ""
+        }
+        var day = parts[0].toInt()
+        val index = parts[1].toInt()
+        if (parts[0].toInt() < 10) {
+            day = parts[0].toInt() % 10
+        }
+        parts[0] = day.toString()
+        parts[1] = listMonth[index - 1]
+        return parts.joinToString(separator = " ")
     }
-    if (month == " " || month == "" || days < 1 || days > 31) return ""
-    return String.format("%d %s %d", days, month, year)
-}
 
 /**
  * Средняя
@@ -252,7 +246,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var commandNumber = 0
     var lim = 0
     var rec = 0
-    var z = 0
+    var z = 1
     var mutList = MutableList(cells, { 0 })
     if (commands.length == 0 ) return mutList
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
