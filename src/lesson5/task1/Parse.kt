@@ -74,11 +74,11 @@ fun dateStrToDigit(str: String): String {
     var year = 0
     val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
             "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    if (parts[0].matches(Regex("""[0123456789]"""))) days = parts[0].toInt()
+    if (parts[0].matches(Regex("""[\d]"""))) days = parts[0].toInt()
     else return ""
     month = months.indexOf(parts[1])
     if (month == -1) return ""
-    if (parts[2].matches(Regex("""[0123456789]"""))) year = parts[2].toInt()
+    if (parts[2].matches(Regex("""[\d]"""))) year = parts[2].toInt()
     else return ""
     return String.format("%02d.%02d.%d", days, month, year)
 }
@@ -99,11 +99,11 @@ fun dateDigitToStr(digital: String): String {
     val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
             "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
     try {
-        if (parts[0].matches(Regex("""[0123456789]"""))) days = parts[0].toInt()
+        if (parts[0].matches(Regex("""[\d]"""))) days = parts[0].toInt()
         else return ""
         if (parts[1].toInt() == -1) return ""
         else month = months[parts[1].toInt()]
-        if (parts[2].matches(Regex("""[0123456789]"""))) year = parts[2].toInt()
+        if (parts[2].matches(Regex("""[\d]"""))) year = parts[2].toInt()
         else return ""
     } catch (ex: NumberFormatException) {
         return ""
@@ -252,7 +252,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var commandNumber = 0
     var lim = 0
     var rec = 0
-    var k = 0
+    var z = 0
     var mutList = MutableList(cells, { 0 })
     if (commands.length == 0 ) return mutList
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
@@ -270,14 +270,14 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             commands[commandNumber] == '<' -> cellNumber--
             commands[commandNumber] == '[' -> {
                 if (mutList[cellNumber] == 0) {
-                    k = commandNumber
+                    z = commandNumber
                     while (commandNumber <= commands.length - 1) {
                         if (commands[commandNumber] == '[') rec++
                         if (commands[commandNumber] == ']') rec--
-                        if (rec == 0) break
                         commandNumber++
+                        if (rec == 0) break
                     }
-                    if (k == 0 && commandNumber == commands.length - 1) return mutList
+                    if (z == 0 && commandNumber == commands.length - 1) return mutList
                 }
             }
             commands[commandNumber] == ']' -> {
@@ -285,8 +285,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     while (commandNumber >= 0) {
                         if (commands[commandNumber] == '[') rec++
                         if (commands[commandNumber] == ']') rec--
-                        if (rec == 0) break
                         commandNumber--
+                        if (rec == 0) break
                     }
                 }
             }
