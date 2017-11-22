@@ -67,23 +67,16 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val parts = str.split(" ")
-    if (parts.count() != 3) return ""
-    var days = 0
-    var month = 0
-    var year = 0
-    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
-            "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    if (Regex("""[0123456789]""").find(parts[0]) != null) days = parts[0].toInt()
-    else return ""
-    month = months.indexOf(parts[1])
-    if (month == -1) return ""
-    if (Regex("""[0123456789]""").find(parts[2]) != null) year = parts[2].toInt()
-    else return ""
-    return String.format("%02d.%02d.%d", days, month, year)
+    val listMonth = listOf<String>(" ", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+            "сентября", "октября", "ноября", "декабря")
+    val parts = str.split(" ").toMutableList()
+    if ((parts.count() != 3) || !(parts[1] in listMonth)) return ""
+    val month = listMonth.indexOf(parts[1])
+    parts[0] = twoDigitStr(parts[0].toInt())
+    parts[1] = twoDigitStr(month.toInt())
+    return parts.joinToString(separator = ".")
 }
-
-/**
+    /**
  * Средняя
  *
  * Дата представлена строкой вида "15.07.2016".
@@ -91,26 +84,27 @@ fun dateStrToDigit(str: String): String {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateDigitToStr(digital: String): String {
-    val parts = digital.split(".")
-    if (parts.count() != 3) return ""
-    var days = 0
-    var month = ""
-    var year = 0
-    val months = listOf(" ", "января", "февраля", "марта", "апреля", "мая",
-            "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    try {
-        if (Regex("""[0123456789]""").find(parts[0]) != null) days = parts[0].toInt()
-        else return ""
-        if (parts[1].toInt() == -1) return ""
-        else month = months[parts[1].toInt()]
-        if (Regex("""[0123456789]""").find(parts[2]) != null) year = parts[2].toInt()
-        else return ""
-    } catch (ex: NumberFormatException) {
-        return ""
+        val listMonth = listOf<String>("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+                "сентября", "октября", "ноября", "декабря")
+        val parts = digital.split(".").toMutableList()
+        if (parts.count() != 3) return ""
+
+        var month = 0
+        try {
+            month = parts[1].toInt() - 1
+            if (month !in 0..11) return ""
+        } catch (ex: NumberFormatException) {
+            return ""
+        }
+        var day = parts[0].toInt()
+        val index = parts[1].toInt()
+        if (parts[0].toInt() < 10) {
+            day = parts[0].toInt() % 10
+        }
+        parts[0] = day.toString()
+        parts[1] = listMonth[index - 1]
+        return parts.joinToString(separator = " ")
     }
-    if (month == " " || month == "" || days < 1 || days > 31) return ""
-    return String.format("%d %s %d", days, month, year)
-}
 
 /**
  * Средняя
@@ -172,7 +166,17 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var duplicate = ""
+    var allLength = 0
+    for (s in str.toLowerCase().split(' ')) {
+        if (s != duplicate) {
+            duplicate = s
+            allLength += s.length + 1
+        } else return allLength - s.length - 1
+    }
+    return -1
+}
 
 /**
  * Сложная
@@ -237,11 +241,14 @@ fun fromRoman(roman: String): Int = TODO()
  *
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var i = cells / 2
-    var j = 0
+    var cellNumber = cells / 2
+    if (cells == 1) cellNumber = 1
+    var commandNumber = 0
     var lim = 0
     var rec = 0
+    var z = 1
     var mutList = MutableList(cells, { 0 })
+    if (commands.length == 0 ) return mutList
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
     for (k in 0..commands.length - 1) {
         if (commands[k] == '[') rec++
@@ -249,37 +256,39 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (rec == -1) throw IllegalArgumentException()
     }
     if (rec != 0) throw IllegalArgumentException()
-    while (lim < limit && j < commands.length) {
+    while (lim < limit && commandNumber < commands.length) {
         when {
-            commands[j] == '+' -> mutList[i]++
-            commands[j] == '-' -> mutList[i]--
-            commands[j] == '>' -> i++
-            commands[j] == '<' -> i--
-            commands[j] == '[' -> {
-                if (mutList[i] == 0) {
-                    while (j <= commands.length - 1) {
-                        if (commands[j] == '[') rec++
-                        if (commands[j] == ']') rec--
+            commands[commandNumber] == '+' -> mutList[cellNumber]++
+            commands[commandNumber] == '-' -> mutList[cellNumber]--
+            commands[commandNumber] == '>' -> cellNumber++
+            commands[commandNumber] == '<' -> cellNumber--
+            commands[commandNumber] == '[' -> {
+                if (mutList[cellNumber] == 0) {
+                    z = commandNumber
+                    while (commandNumber <= commands.length - 1) {
+                        if (commands[commandNumber] == '[') rec++
+                        if (commands[commandNumber] == ']') rec--
+                        commandNumber++
                         if (rec == 0) break
-                        j++
+                    }
+                    if (z == 0 && commandNumber == commands.length - 1) return mutList
+                }
+            }
+            commands[commandNumber] == ']' -> {
+                if (mutList[cellNumber] != 0) {
+                    while (commandNumber >= 0) {
+                        if (commands[commandNumber] == '[') rec++
+                        if (commands[commandNumber] == ']') rec--
+                        commandNumber--
+                        if (rec == 0) break
                     }
                 }
             }
-            commands[j] == ']' -> {
-                if (mutList[i] != 0) {
-                    while (j >= 0) {
-                        if (commands[j] == '[') rec++
-                        if (commands[j] == ']') rec--
-                        if (rec == 0) break
-                        j--
-                    }
-                }
-            }
-            commands[j] == ' ' -> {
+            commands[commandNumber] == ' ' -> {
             }
         }
-        lim++; j++
-        if (i !in 0..cells) throw IllegalStateException()
+        lim++; commandNumber++
+        if (cellNumber !in 0..cells) throw IllegalStateException()
     }
     return mutList
 }

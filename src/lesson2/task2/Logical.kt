@@ -41,17 +41,6 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean =
         r2 - sqrt(sqr(x1 - x2) + sqr(y1 - y2)) >= r1
 /**
- * Функция для нахождения среднего числа из 3
- */
-
-fun middleOfThree(a: Int, b: Int, c: Int): Int =
-        when {
-            b >= a && a >= c || c >= a && a >= b -> a
-            a >= b && b >= c || c >= b && b >= a -> b
-            a >= c && c >= b || b >= c && c >= a -> c
-            else -> 0
-        }
-/**
  * Средняя
  *
  * Определить, пройдет ли кирпич со сторонами а, b, c сквозь прямоугольное отверстие в стене со сторонами r и s.
@@ -64,7 +53,7 @@ fun middleOfThree(a: Int, b: Int, c: Int): Int =
 
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     var minOfBrick = minOf(a, b, c)
-    var middleOfBrick = middleOfThree(a, b, c)
+    var middleOfBrick = a + b + c - maxOf(a, b, c) - minOf(a, b, c)
     var minOfPas = minOf(r, s)
     var maxOfPas = maxOf(r, s)
     return minOfBrick <= minOfPas && middleOfBrick <= maxOfPas
