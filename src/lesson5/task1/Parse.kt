@@ -298,9 +298,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
         lim++
         commandNumber++
-        if (cells != 1) {
-            if (cellNumber !in 0..cells) throw IllegalStateException()
-        } else if (cellNumber != 0) throw IllegalStateException()
+            if (cellNumber !in 0..cells - 1) throw IllegalStateException()
     }
     return mutList
 }
