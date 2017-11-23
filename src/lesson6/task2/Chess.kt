@@ -66,8 +66,12 @@ fun square(notation: String): Square {
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int = TODO()
-
+fun rookMoveNumber(start: Square, end: Square): Int = when {
+    (!start.inside() || !end.inside()) -> throw IllegalArgumentException()
+    start.column == end.column && start.row == end.row -> 0
+    start.column == end.column || start.row == end.row -> 1
+    else -> 2
+}
 /**
  * Средняя
  *
@@ -82,7 +86,19 @@ fun rookMoveNumber(start: Square, end: Square): Int = TODO()
  *          rookTrajectory(Square(3, 5), Square(8, 5)) = listOf(Square(3, 5), Square(8, 5))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun rookTrajectory(start: Square, end: Square): List<Square> {
+    val mutList = mutableListOf(start)
+    val moveNumber = rookMoveNumber(start, end)
+    when {
+        moveNumber == 0 -> return mutList
+        moveNumber == 1 -> mutList.add(Square(end.column, end.row))
+        moveNumber == 2 -> {
+            mutList.add(Square(start.column, end.row))
+            mutList.add(Square(end.column, end.row))
+        }
+    }
+    return mutList
+}
 
 /**
  * Простая
@@ -107,7 +123,13 @@ fun rookTrajectory(start: Square, end: Square): List<Square> = TODO()
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    !start.inside() || !end.inside() -> throw IllegalArgumentException()
+    start == end -> 0
+    Math.abs(end.row - start.row) == Math.abs(end.column - start.column) -> 1
+    (start.row + start.column) % 2 != (end.row + end.column) % 2 -> -1
+    else -> 2
+}
 
 /**
  * Сложная
@@ -127,7 +149,57 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    val moveNumber = bishopMoveNumber(start, end)
+    val mutList = mutableListOf(start)
+    var a = 0
+    var b = 0
+    var p = end.row
+    var k = end.column
+    when {
+        moveNumber == -1 -> return listOf()
+        moveNumber == 0 -> return mutList
+        moveNumber == 1 -> mutList.add(Square(end.column, end.row))
+        else -> {
+            if (start.row == end.row) {
+                a = end.column - (end.column - start.column) / 2
+                b = start.row + (end.column - start.column) / 2
+                if (!Square(a, b).inside())
+                    b = start.row - (end.column - start.column) / 2
+            }
+            if (start.column == end.column) {
+                b = end.row - (end.row - start.row) / 2
+                a = start.column + (end.row - start.row) / 2
+                if (!Square(a, b).inside())
+                    a = start.column - (end.row - start.row) / 2
+            }
+            if (start.column != end.column && start.row != end.row) {
+                if (start.row < end.row) {
+                    while (p != start.row) {
+                        p--
+                        k++
+                    }
+                    a = k - (k - start.column) / 2
+                    b = start.row + (k - start.column) / 2
+                    if (!Square(a, b).inside())
+                        b = start.row - (k - start.column) / 2
+                } else {
+                    while (p != start.row) {
+                        p++
+                        k++
+                    }
+                    a = k - (k - start.column) / 2
+                    b = start.row + (k - start.column) / 2
+                    if (!Square(a, b).inside())
+                        b = start.row - (k - start.column) / 2
+                }
+            }
+            mutList.add(Square(a, b))
+            mutList.add(Square(end.column, end.row))
+        }
+    }
+    return mutList
+}
 
 /**
  * Средняя

@@ -67,13 +67,13 @@ fun main(args: Array<String>) {
  * При неверном формате входной строки вернуть пустую строку
  */
 fun dateStrToDigit(str: String): String {
-    val listMonth = listOf<String>(" ", "января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+    val listMonth = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
             "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ").toMutableList()
-    if ((parts.count() != 3) || !(parts[1] in listMonth)) return ""
+    if ((parts.count() != 3) || !(parts[1] in listMonth) || (parts[0].toInt() !in 1..31)) return ""
     val month = listMonth.indexOf(parts[1])
     parts[0] = twoDigitStr(parts[0].toInt())
-    parts[1] = twoDigitStr(month.toInt())
+    parts[1] = twoDigitStr(month + 1)
     return parts.joinToString(separator = ".")
 }
     /**
@@ -83,26 +83,25 @@ fun dateStrToDigit(str: String): String {
  * Перевести её в строковый формат вида "15 июля 2016".
  * При неверном формате входной строки вернуть пустую строку
  */
-fun dateDigitToStr(digital: String): String {
-        val listMonth = listOf<String>("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
+    fun dateDigitToStr(digital: String): String {
+        val listMonth = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа",
                 "сентября", "октября", "ноября", "декабря")
         val parts = digital.split(".").toMutableList()
-        if (parts.count() != 3) return ""
-
+        if ((parts.count() != 3)) return ""
         var month = 0
         try {
             month = parts[1].toInt() - 1
             if (month !in 0..11) return ""
+            var day = parts[0].toInt()
+            val index = parts[1].toInt()
+            if (parts[0].toInt() < 10) {
+                day = parts[0].toInt() % 10
+            }
+            parts[0] = day.toString()
+            parts[1] = listMonth[index - 1]
         } catch (ex: NumberFormatException) {
             return ""
         }
-        var day = parts[0].toInt()
-        val index = parts[1].toInt()
-        if (parts[0].toInt() < 10) {
-            day = parts[0].toInt() % 10
-        }
-        parts[0] = day.toString()
-        parts[1] = listMonth[index - 1]
         return parts.joinToString(separator = " ")
     }
 
@@ -248,9 +247,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var rec = 0
     var z = 1
     var mutList = MutableList(cells, { 0 })
-    if (commands.length == 0 ) return mutList
+    if (commands.isEmpty()) return mutList
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
-    for (k in 0..commands.length - 1) {
+    for (k in 0 until commands.length) {
         if (commands[k] == '[') rec++
         if (commands[k] == ']') rec--
         if (rec == -1) throw IllegalArgumentException()
@@ -268,8 +267,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     while (commandNumber <= commands.length - 1) {
                         if (commands[commandNumber] == '[') rec++
                         if (commands[commandNumber] == ']') rec--
-                        commandNumber++
                         if (rec == 0) break
+                        commandNumber++
                     }
                     if (z == 0 && commandNumber == commands.length - 1) return mutList
                 }
@@ -279,15 +278,16 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                     while (commandNumber >= 0) {
                         if (commands[commandNumber] == '[') rec++
                         if (commands[commandNumber] == ']') rec--
-                        commandNumber--
                         if (rec == 0) break
+                        commandNumber--
                     }
                 }
             }
             commands[commandNumber] == ' ' -> {
             }
         }
-        lim++; commandNumber++
+        lim++
+        commandNumber++
         if (cellNumber !in 0..cells) throw IllegalStateException()
     }
     return mutList
