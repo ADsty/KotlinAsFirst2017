@@ -241,11 +241,7 @@ fun fromRoman(roman: String): Int = TODO()
  */
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var cellNumber = cells / 2
-    if (cells == 1) {
-        cellNumber = 0
-        for (k in 0 until commands.length)
-            if (commands[k] == '>' || commands[k] == '<') throw IllegalStateException()
-    }
+    if (cells == 1) cellNumber = 0
     var commandNumber = 0
     var lim = 0
     var rec = 0
@@ -302,7 +298,9 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         }
         lim++
         commandNumber++
-        if (cellNumber !in 0..cells) throw IllegalStateException()
+        if (cells != 1) {
+            if (cellNumber !in 0..cells) throw IllegalStateException()
+        } else if (cellNumber != 0) throw IllegalStateException()
     }
     return mutList
 }
