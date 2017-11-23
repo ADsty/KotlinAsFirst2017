@@ -152,41 +152,23 @@ fun bishopMoveNumber(start: Square, end: Square): Int = when {
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
     val moveNumber = bishopMoveNumber(start, end)
     val mutList = mutableListOf(start)
-    var a = 0
-    var b = 0
-    var p = end.row
-    var k = end.column
     when {
         moveNumber == -1 -> return listOf()
         moveNumber == 0 -> return mutList
-        moveNumber == 1 -> mutList.add(Square(end.column, end.row))
+        moveNumber == 1 -> mutList.add(end)
         else -> {
-            if (start.row == end.row) {
-                a = end.column - (end.column - start.column) / 2
-                b = start.row + (end.column - start.column) / 2
-                if (!Square(a, b).inside())
-                    b = start.row - (end.column - start.column) / 2
+            var a = start.row - start.column
+            var b = end.column + end.row
+            var y = (a + b) / 2
+            var x = y - a
+            if (!Square(x, y).inside()) {
+                a = start.row + start.column
+                b = end.row - end.column
+                y = (a + b) / 2
+                x = y - b
             }
-            if (start.column == end.column) {
-                b = end.row - (end.row - start.row) / 2
-                a = start.column + (end.row - start.row) / 2
-                if (!Square(a, b).inside())
-                    a = start.column - (end.row - start.row) / 2
-            }
-            if (start.column != end.column && start.row != end.row) {
-                var x = start.row - start.column
-                var y = end.column + end.row
-                b = (x + y) / 2
-                a = b - x
-                if (!Square(a, b).inside()) {
-                    x = start.row + start.column
-                    y = end.column - end.row
-                    b = (x + y) / 2
-                    a = b - y
-                }
-            }
-            mutList.add(Square(a, b))
-            mutList.add(Square(end.column, end.row))
+            mutList.add(Square(x, y))
+            mutList.add(end)
         }
     }
     return mutList
