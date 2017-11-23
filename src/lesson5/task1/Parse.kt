@@ -246,6 +246,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var lim = 0
     var rec = 0
     var z = 1
+    var a = 1
     var mutList = MutableList(cells, { 0 })
     if (commands.isEmpty()) return mutList
     if (!commands.matches(Regex("""[\[><\+\-\] ]+"""))) throw IllegalArgumentException()
@@ -255,6 +256,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         if (rec == -1) throw IllegalArgumentException()
     }
     if (rec != 0) throw IllegalArgumentException()
+    for (k in 0 until commands.length) {
+        if (commands[k] == '[') rec++
+        if (commands[k] == ']') rec--
+        if (rec == 0) break
+        a++
+    }
+    if (a == commands.length) return mutList
     while (lim < limit && commandNumber < commands.length) {
         when {
             commands[commandNumber] == '+' -> mutList[cellNumber]++

@@ -174,24 +174,15 @@ fun bishopTrajectory(start: Square, end: Square): List<Square> {
                     a = start.column - (end.row - start.row) / 2
             }
             if (start.column != end.column && start.row != end.row) {
-                if (start.row < end.row) {
-                    while (p != start.row) {
-                        p--
-                        k++
-                    }
-                    a = k - (k - start.column) / 2
-                    b = start.row + (k - start.column) / 2
-                    if (!Square(a, b).inside())
-                        b = start.row - (k - start.column) / 2
-                } else {
-                    while (p != start.row) {
-                        p++
-                        k++
-                    }
-                    a = k - (k - start.column) / 2
-                    b = start.row + (k - start.column) / 2
-                    if (!Square(a, b).inside())
-                        b = start.row - (k - start.column) / 2
+                var x = start.row - start.column
+                var y = end.column + end.row
+                b = (x + y) / 2
+                a = b - x
+                if (!Square(a, b).inside()) {
+                    x = start.row + start.column
+                    y = end.column - end.row
+                    b = (x + y) / 2
+                    a = b - y
                 }
             }
             mutList.add(Square(a, b))
