@@ -83,8 +83,7 @@ class MatrixImpl<E>(override val height: Int, override val width: Int, val e: E)
                 width == other.width)) return false
         (0 until this.height).forEach { row ->
             (0 until this.width)
-                    .filter { this[row, it] != other[row, it] }
-                    .forEach { return false }
+                    .any { this[row, it] != other[row, it] }
         }
         return true
     }

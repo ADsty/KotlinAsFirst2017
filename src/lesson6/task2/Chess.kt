@@ -39,7 +39,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
-    val listOfSymbols = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
+    val listOfSymbols = listOf('a'..'h' step 1).last()
     val col = listOfSymbols.indexOf(notation[0]) + 1
     val row = notation[1].toInt() - '0'.toInt()
     if (col !in 1..8 || row !in 1..8) throw IllegalArgumentException()
