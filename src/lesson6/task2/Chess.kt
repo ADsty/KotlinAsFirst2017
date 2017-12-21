@@ -26,7 +26,7 @@ data class Square(val column: Int, val row: Int) {
      * Для клетки не в пределах доски вернуть пустую строку
      */
     fun notation(): String {
-        if (this.column - 1 + 'a'.toInt() !in 'a'.toInt()..'h'.toInt() || this.row !in 1..8) return ""
+        if (this.column !in 1..8 || this.row !in 1..8) return ""
         return "${(this.column - 1 + 'a'.toInt()).toChar()}${this.row}"
     }
 }
@@ -39,8 +39,9 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
-    val col = notation[0].toInt() + 1 - 'a'.toInt()
-    val row = notation[1].toInt() - '0'.toInt()
+    val listOfSymbols = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
+    val col = listOfSymbols.indexOf(notation[0]) + 1
+    val row = notation[1].toInt()
     if (col !in 1..8 || row !in 1..8) throw IllegalArgumentException()
     return Square(col, row)
 }
@@ -91,10 +92,10 @@ fun rookMoveNumber(start: Square, end: Square): Int = when {
 fun rookTrajectory(start: Square, end: Square): List<Square> {
     val mutList = mutableListOf(start)
     val moveNumber = rookMoveNumber(start, end)
-    when {
-        moveNumber == 0 -> return mutList
-        moveNumber == 1 -> mutList.add(Square(end.column, end.row))
-        moveNumber == 2 -> {
+    when (moveNumber) {
+        0 -> return mutList
+        1 -> mutList.add(Square(end.column, end.row))
+        2 -> {
             mutList.add(Square(start.column, end.row))
             mutList.add(Square(end.column, end.row))
         }
