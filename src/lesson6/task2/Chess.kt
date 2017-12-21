@@ -41,7 +41,7 @@ fun square(notation: String): Square {
     if (notation.length != 2) throw IllegalArgumentException()
     val listOfSymbols = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')
     val col = listOfSymbols.indexOf(notation[0]) + 1
-    val row = notation[1].toInt()
+    val row = notation[1].toInt() + 1 - '0'.toInt()
     if (col !in 1..8 || row !in 1..8) throw IllegalArgumentException()
     return Square(col, row)
 }
