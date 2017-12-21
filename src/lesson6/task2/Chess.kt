@@ -155,10 +155,10 @@ fun bishopMoveNumber(start: Square, end: Square): Int = when {
 fun bishopTrajectory(start: Square, end: Square): List<Square> {
     val moveNumber = bishopMoveNumber(start, end)
     val mutList = mutableListOf(start)
-    when {
-        moveNumber == -1 -> return listOf()
-        moveNumber == 0 -> return mutList
-        moveNumber == 1 -> mutList.add(end)
+    when (moveNumber) {
+        -1 -> return listOf()
+        0 -> return mutList
+        1 -> mutList.add(end)
         else -> {
             var a = start.row - start.column
             var b = end.column + end.row
